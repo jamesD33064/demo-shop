@@ -156,7 +156,7 @@ export default function Home() {
               >
                 <CardHeader className="flex flex-col items-center align-middle justify-center">
                   <CardTitle>{tart.name}</CardTitle>
-                  <CardDescription>Tart Description</CardDescription>
+                  <CardDescription>{}</CardDescription>
                 </CardHeader>
                 <CardContent>
                   <Image

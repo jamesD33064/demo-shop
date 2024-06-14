@@ -1,5 +1,5 @@
-import { Avatar, AvatarFallback } from "@/components/ui/avatar"
-import { BackpackIcon } from "@radix-ui/react-icons"
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { BackpackIcon } from "@radix-ui/react-icons";
 import { TbShoppingCart, TbShoppingCartFilled } from "react-icons/tb";
 import {
     Carousel,
@@ -7,25 +7,40 @@ import {
     CarouselItem,
     CarouselNext,
     CarouselPrevious,
-    type CarouselApi,
-} from "@/components/ui/carousel"
+    type CarouselApi
+} from "@/components/ui/carousel";
 import {
     Popover,
     PopoverContent,
     PopoverTrigger,
-} from "@/components/ui/popover"
+} from "@/components/ui/popover";
 import {
     Card,
     CardContent,
     CardFooter,
     CardHeader,
     CardTitle,
-} from "@/components/ui/card"
+} from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import * as React from "react"
+import useLocalStorage from "@/CustomHook/localstorage";
+import { useEffect, useState } from "react";
+import { Order, tartList, Tart } from "../data/DailyMenu";
 
 export function PopoverCart() {
+    const [orders, _1] = useLocalStorage("order", "");
+    const [orderList, setOrderList] = useState<Order[]>([]);
+
+    useEffect(() => {
+        setOrderList(orders);
+    }, [orders]);
+
+    const product: Tart = 1
+        ? tartList.filter((item) => item.id === "1")[0]
+        : tartList[0];
+
+    // 訂單數量
     const [api, setApi] = React.useState<CarouselApi>()
     const [current, setCurrent] = React.useState(0)
     const [count, setCount] = React.useState(0)
@@ -40,7 +55,6 @@ export function PopoverCart() {
             setCurrent(api.selectedScrollSnap() + 1)
         })
     }, [api])
-
     return (
         <>
             <div className="md:hidden">
@@ -48,7 +62,9 @@ export function PopoverCart() {
                     <div className="z-10 fixed bottom-4 right-4">
                         <PopoverTrigger>
                             <Avatar>
-                                <AvatarFallback className="bg-slate-200"><BackpackIcon></BackpackIcon></AvatarFallback>
+                                <AvatarFallback className="bg-slate-200">
+                                    <BackpackIcon></BackpackIcon>
+                                </AvatarFallback>
                             </Avatar>
                         </PopoverTrigger>
                     </div>
@@ -58,61 +74,35 @@ export function PopoverCart() {
                             查看單日訂單
                         </div>
                         <Carousel setApi={setApi}>
-                            <CarouselContent className="mx-10">
-                                <CarouselItem>
-                                    <Card>
-                                        <CardHeader>
-                                            <CardTitle>5/1 面交單</CardTitle>
-                                        </CardHeader>
-                                        <CardContent>
-                                            <p>抹茶*1 = $550</p>
-                                            <p>無花果*1 = $680</p>
-                                            <p>母親節限定*1 = $780</p>
-                                            <p>檸檬*1 = $450</p>
-                                        </CardContent>
-                                        <CardFooter>
-                                            <Button asChild>
-                                                <Link href="/DailyMenu/Checkout">確認訂單</Link>
-                                            </Button>
-                                        </CardFooter>
-                                    </Card>
-                                </CarouselItem>
-                                <CarouselItem>
-                                    <Card>
-                                        <CardHeader>
-                                            <CardTitle>5/2 面交單</CardTitle>
-                                        </CardHeader>
-                                        <CardContent>
-                                            <p>抹茶*1 = $550</p>
-                                            <p>無花果*1 = $680</p>
-                                            <p>母親節限定*1 = $780</p>
-                                            <p>檸檬*1 = $450</p>
-                                        </CardContent>
-                                        <CardFooter>
-                                            <Button asChild>
-                                                <Link href="/DailyMenu/Checkout">確認訂單</Link>
-                                            </Button>
-                                        </CardFooter>
-                                    </Card>
-                                </CarouselItem>
-                                <CarouselItem>
-                                    <Card>
-                                        <CardHeader>
-                                            <CardTitle>5/3 面交單</CardTitle>
-                                        </CardHeader>
-                                        <CardContent>
-                                            <p>抹茶*1 = $550</p>
-                                            <p>無花果*1 = $680</p>
-                                            <p>母親節限定*1 = $780</p>
-                                            <p>檸檬*1 = $450</p>
-                                        </CardContent>
-                                        <CardFooter>
-                                            <Button asChild>
-                                                <Link href="/DailyMenu/Checkout">確認訂單</Link>
-                                            </Button>
-                                        </CardFooter>
-                                    </Card>
-                                </CarouselItem>
+                            <CarouselContent className="px-10">
+                                {orderList ? orderList.map((item) => (
+                                    <CarouselItem key={item.date}>
+                                        <Card>
+                                            <CardHeader>
+                                                <CardTitle>{item.date} 面交單</CardTitle>
+                                            </CardHeader>
+                                            <CardContent>
+                                                {item.order ? item.order.map((product) => {
+                                                    const matchedItem = tartList.filter(
+                                                        (item) => item.id === product.id
+                                                    )[0];
+                                                    return (
+                                                        <p key={product.id}>
+                                                            {matchedItem
+                                                                ? `${matchedItem.name} * ${product.count} = ${product.count * matchedItem.price} NTD`
+                                                                : `Product not found ${product.id}`}
+                                                        </p>
+                                                    );
+                                                }) : ""}
+                                            </CardContent>
+                                            <CardFooter>
+                                                <Button asChild>
+                                                    <Link href="/DailyMenu/Checkout">查看訂單</Link>
+                                                </Button>
+                                            </CardFooter>
+                                        </Card>
+                                    </CarouselItem>
+                                )) : ""}
                             </CarouselContent>
                             {/* <CarouselPrevious />
                             <CarouselNext /> */}
@@ -131,5 +121,5 @@ export function PopoverCart() {
                 </Popover>
             </div>
         </>
-    )
+    );
 }
