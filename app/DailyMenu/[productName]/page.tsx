@@ -40,13 +40,15 @@ import {
   SelectValue,
 } from "@/components/ui/select"
 import { Separator } from "@/components/ui/separator"
+import { ToastAction } from "@/components/ui/toast"
+import { useToast } from "@/components/ui/use-toast"
 
 export default function OrderDate({ params }: { params: { productName: string } }) {
-  const boxes = Array.from({ length: 100 }, (_, index) => index + 1);
+  const { toast } = useToast()
   const [date, setDate] = useState<Date | undefined>();
   const searchParams = useSearchParams();
   const product: Tart = searchParams.get('product') ?
-    tartList.filter((item) => item.id === String(searchParams.get('product')))[0]:
+    tartList.filter((item) => item.id === String(searchParams.get('product')))[0] :
     tartList[0];
 
   return (
@@ -154,9 +156,18 @@ export default function OrderDate({ params }: { params: { productName: string } 
 
           {/* 加入購物車按鈕 */}
           <div className='w-full px-4'>
-            <Button className='w-full'>
-              <EnvelopeOpenIcon className="mr-2 h-4 w-4" /> 加入購物車
-            </Button>
+          <Button
+            className='w-full'
+            onClick={() => {
+              toast({
+                title: "加入購物車成功！",
+                description: product.name,
+                action: <ToastAction altText="Try again">取消加入</ToastAction>,
+              })
+            }}
+          >
+            <EnvelopeOpenIcon className="mr-2 h-4 w-4" /> 加入購物車
+          </Button>
           </div>
 
           <Separator className='m-2' />

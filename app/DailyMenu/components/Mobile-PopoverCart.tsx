@@ -1,11 +1,13 @@
 import { Avatar, AvatarFallback } from "@/components/ui/avatar"
 import { BackpackIcon } from "@radix-ui/react-icons"
+import { TbShoppingCart, TbShoppingCartFilled } from "react-icons/tb";
 import {
     Carousel,
     CarouselContent,
     CarouselItem,
     CarouselNext,
     CarouselPrevious,
+    type CarouselApi,
 } from "@/components/ui/carousel"
 import {
     Popover,
@@ -21,8 +23,24 @@ import {
 } from "@/components/ui/card"
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
+import * as React from "react"
 
 export function PopoverCart() {
+    const [api, setApi] = React.useState<CarouselApi>()
+    const [current, setCurrent] = React.useState(0)
+    const [count, setCount] = React.useState(0)
+
+    React.useEffect(() => {
+        if (!api) {
+            return
+        }
+        setCount(api.scrollSnapList().length)
+        setCurrent(api.selectedScrollSnap() + 1)
+        api.on("select", () => {
+            setCurrent(api.selectedScrollSnap() + 1)
+        })
+    }, [api])
+
     return (
         <>
             <div className="md:hidden">
@@ -34,10 +52,13 @@ export function PopoverCart() {
                             </Avatar>
                         </PopoverTrigger>
                     </div>
-                    <PopoverContent>
-                        <h1 className="pb-4">看看你的購物車吧！</h1>
-                        <Carousel>
-                            <CarouselContent>
+                    <PopoverContent className="w-screen">
+                        {/* <h1 className="pb-4 font-bold">看看你的購物車吧！</h1> */}
+                        <div className="font-bold text-center pb-3">
+                            查看單日訂單
+                        </div>
+                        <Carousel setApi={setApi}>
+                            <CarouselContent className="mx-10">
                                 <CarouselItem>
                                     <Card>
                                         <CardHeader>
@@ -90,9 +111,22 @@ export function PopoverCart() {
                                                 <Link href="/DailyMenu/Checkout">確認訂單</Link>
                                             </Button>
                                         </CardFooter>
-                                    </Card></CarouselItem>
+                                    </Card>
+                                </CarouselItem>
                             </CarouselContent>
+                            {/* <CarouselPrevious />
+                            <CarouselNext /> */}
                         </Carousel>
+                        <div className="py-2 flex justify-center text-center text-sm">
+                            {/* {current} of {count} */}
+                            {Array.from({ length: count }, (_, index) => {
+                                return index + 1 === current ? (
+                                    <TbShoppingCartFilled key={index} />
+                                ) : (
+                                    <TbShoppingCart key={index} />
+                                );
+                            })}
+                        </div>
                     </PopoverContent>
                 </Popover>
             </div>

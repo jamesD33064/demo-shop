@@ -1,5 +1,4 @@
 "use client"
-import { Metadata } from "next"
 import Image from "next/image"
 import { useEffect, useState } from 'react';
 import { PlusCircledIcon, HomeIcon } from "@radix-ui/react-icons"
@@ -45,6 +44,7 @@ import { listenNowAlbums, madeForYouAlbums } from "./data/albums"
 import { playlists } from "./data/playlists"
 import { dailyMenu, tartList } from "./data/DailyMenu"
 import Link from "next/link";
+import { Badge } from "@/components/ui/badge"
 
 export default function Home() {
   const boxes = Array.from({ length: 100 }, (_, index) => index + 1);
@@ -104,7 +104,6 @@ export default function Home() {
                 <AspectRatio ratio={16 / 9} className="z-0">
                   <Image
                     src="/frontpage.jpg"
-                    className="rounded-md"
                     layout="fill"
                     objectFit="cover"
                     objectPosition="center"
@@ -115,14 +114,12 @@ export default function Home() {
                 <AspectRatio ratio={16 / 9} className="z-0">
                   <Image
                     src="/logo.jpg"
-                    className="rounded-md"
                     layout="fill"
                     objectFit="cover"
                     objectPosition="center"
                     alt="image"
                   />
                 </AspectRatio></CarouselItem>
-              <CarouselItem>...</CarouselItem>
             </CarouselContent>
           </Carousel>
         </div>
@@ -134,13 +131,18 @@ export default function Home() {
                 key={item.date}
                 className="w-full">
                 <div className="flex flex-wrap gap-4">
-                  <h1>{item.date}：</h1>
-                  {item.tartList.map((tart) => (
-                    <div key={tart}>
-                      {tart}
-                    </div>
-                  ))}
+                  <Badge variant="outline" className="text-sm">{item.date}</Badge>
+                  {item.remark !== '' ?
+                    <Badge variant="secondary" className="text-sm">{item.remark}</Badge> :
+                    item.tartList.map((tart) => (
+                      <Badge key={tart.id} variant="secondary" className="bg-orange-50 py-1 px-2 rounded-md font-normal text-sm">
+                        <Link href={`/DailyMenu/` + tart.engName + '?product=' + tart.id}>
+                          {tart.name}
+                        </Link>
+                      </Badge>
+                    ))}
                 </div>
+                <Separator className="mt-4" />
               </div>
             ))}
           </div>
@@ -152,7 +154,7 @@ export default function Home() {
                 id={`tart-${index}`}
                 className={`flex flex-col z-0 items-center align-middle justify-center transition-transform duration-500 transform ${isVisible[index] ? 'scale-100' : 'scale-0'}`}
               >
-                <CardHeader>
+                <CardHeader className="flex flex-col items-center align-middle justify-center">
                   <CardTitle>{tart.name}</CardTitle>
                   <CardDescription>Tart Description</CardDescription>
                 </CardHeader>

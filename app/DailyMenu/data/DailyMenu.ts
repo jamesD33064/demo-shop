@@ -1,7 +1,7 @@
 export interface DailyMenu {
   date: string
-  tartList: string[]
-  cover: string[]
+  tartList: Tart[]
+  remark: string
 }
 export interface Tart {
   id: string
@@ -45,27 +45,37 @@ export const tartList: Tart[] = [
 export const dailyMenu: DailyMenu[] = [
   {
     date: "星期一",
-    tartList: [tartList[0].name, tartList[1].name],
-    cover: ["/logo.jpg", "/logo.jpg", "/logo.jpg"]
+    tartList: [tartList[0], tartList[3], tartList[2]],
+    remark: "公休"
   },
   {
     date: "星期二",
-    tartList: [tartList[1].name, tartList[2].name],
-    cover: ["/logo.jpg", "/logo.jpg", "/logo.jpg"]
+    tartList: [tartList[1], tartList[2]],
+    remark: "公休"
   },
   {
     date: "星期三",
-    tartList: [tartList[2].name, tartList[3].name],
-    cover: ["/logo.jpg", "/logo.jpg", "/logo.jpg"]
+    tartList: [tartList[0], tartList[3], tartList[2]],
+    remark: ""
   },
   {
     date: "星期四",
-    tartList: [tartList[0].name, tartList[2].name],
-    cover: ["/logo.jpg", "/logo.jpg", "/logo.jpg"]
+    tartList: [tartList[0], tartList[2]],
+    remark: ""
   },
   {
     date: "星期五",
-    tartList: [tartList[1].name, tartList[3].name],
-    cover: ["/logo.jpg", "/logo.jpg", "/logo.jpg"]
+    tartList: [tartList[1], tartList[3]],
+    remark: ""
+  },
+  {
+    date: "星期六",
+    tartList: [tartList[0], tartList[2]],
+    remark: ""
+  },
+  {
+    date: "星期日",
+    tartList: [tartList[1], tartList[3]],
+    remark: ""
   },
 ]
