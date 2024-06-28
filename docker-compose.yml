@@ -10,6 +10,8 @@ services:
       - MONGODB_URI=mongodb://mongo:27017/myapp
     depends_on:
       - mongo
+    volumes:
+      - .:/app
   mongo:
     image: mongo:4.4
     volumes:
