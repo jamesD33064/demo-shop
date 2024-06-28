@@ -15,4 +15,4 @@ COPY --from=builder /app/package.json ./package.json
 
 COPY . .
 RUN npm ci
-CMD ["npm", "start"]
+CMD ["npm", "run", "dev"]
